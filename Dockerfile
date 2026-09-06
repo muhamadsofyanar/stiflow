@@ -41,8 +41,11 @@ RUN rm -f bootstrap/cache/*.php \
     && mkdir -p \
         storage/app/private storage/app/public \
         storage/framework/cache/data storage/framework/sessions storage/framework/views \
-        storage/logs bootstrap/cache /tmp/nginx/client_body /tmp/nginx/proxy /tmp/nginx/fastcgi \
-    && chown -R www-data:www-data storage bootstrap/cache /tmp/nginx \
+        storage/logs bootstrap/cache \
+        /tmp/nginx/client_body /tmp/nginx/proxy /tmp/nginx/fastcgi \
+        /var/lib/nginx/logs /var/lib/nginx/tmp/client_body /var/lib/nginx/tmp/proxy \
+        /var/lib/nginx/tmp/fastcgi /var/lib/nginx/tmp/uwsgi /var/lib/nginx/tmp/scgi \
+    && chown -R www-data:www-data storage bootstrap/cache /tmp/nginx /var/lib/nginx \
     && chmod +x docker/entrypoint.sh docker/runtime-smoke.sh
 
 USER www-data
