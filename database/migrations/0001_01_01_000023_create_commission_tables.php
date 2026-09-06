@@ -45,31 +45,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('commission_entries', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_item_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('beneficiary_promoter_profile_id')->constrained('promoter_profiles')->cascadeOnDelete();
-            $table->unsignedTinyInteger('level');
-            $table->string('status')->index();
-            $table->decimal('amount', 15, 2);
-            $table->decimal('amount_paid', 15, 2)->default(0);
-            $table->decimal('rate_value', 12, 4);
-            $table->string('rate_type');
-            $table->foreignId('commission_plan_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('commission_rule_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('reversed_from_entry_id')->nullable()->constrained('commission_entries')->nullOnDelete();
-            $table->foreignId('payout_id')->nullable()->constrained()->nullOnDelete();
-            $table->text('rejection_reason')->nullable();
-            $table->timestamp('earned_at')->nullable();
-            $table->timestamp('locked_at')->nullable();
-            $table->timestamp('paid_at')->nullable();
-            $table->timestamp('reversed_at')->nullable();
-            $table->string('reference_id')->nullable()->index();
-            $table->timestamps();
-            $table->unique(['order_item_id', 'beneficiary_promoter_profile_id', 'level'], 'ce_item_beneficiary_level_unique');
-        });
-
         Schema::create('payouts', function (Blueprint $table) {
             $table->id();
             $table->string('batch_number')->unique();
@@ -95,6 +70,31 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('commission_entries', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('order_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('beneficiary_promoter_profile_id')->constrained('promoter_profiles')->cascadeOnDelete();
+            $table->unsignedTinyInteger('level');
+            $table->string('status')->index();
+            $table->decimal('amount', 15, 2);
+            $table->decimal('amount_paid', 15, 2)->default(0);
+            $table->decimal('rate_value', 12, 4);
+            $table->string('rate_type');
+            $table->foreignId('commission_plan_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('commission_rule_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('reversed_from_entry_id')->nullable()->constrained('commission_entries')->nullOnDelete();
+            $table->foreignId('payout_id')->nullable()->constrained()->nullOnDelete();
+            $table->text('rejection_reason')->nullable();
+            $table->timestamp('earned_at')->nullable();
+            $table->timestamp('locked_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamp('reversed_at')->nullable();
+            $table->string('reference_id')->nullable()->index();
+            $table->timestamps();
+            $table->unique(['order_item_id', 'beneficiary_promoter_profile_id', 'level'], 'ce_item_beneficiary_level_unique');
+        });
+
         Schema::create('payout_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('payout_id')->constrained()->cascadeOnDelete();
@@ -117,8 +117,8 @@ return new class extends Migration
             $table->dropMorphs('proofable');
         });
         Schema::dropIfExists('payout_items');
-        Schema::dropIfExists('payouts');
         Schema::dropIfExists('commission_entries');
+        Schema::dropIfExists('payouts');
         Schema::dropIfExists('order_referral_snapshots');
         Schema::dropIfExists('commission_rules');
         Schema::dropIfExists('commission_plans');
