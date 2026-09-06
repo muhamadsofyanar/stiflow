@@ -70,9 +70,9 @@ return new class extends Migration
         });
 
         Schema::table('order_items', function (Blueprint $table) {
-            $table->foreignId('product_variant_id')->nullable()->after('product_id')->constrained()->nullOnDelete();
-            $table->boolean('is_order_bump_snapshot')->default(false)->after('snapshot_price_per_unit');
-            $table->foreignId('parent_order_item_id')->nullable()->after('is_order_bump_snapshot')->constrained('order_items')->nullOnDelete();
+            $table->foreignId('product_variant_id')->nullable()->constrained()->nullOnDelete();
+            $table->boolean('is_order_bump_snapshot')->default(false);
+            $table->foreignId('parent_order_item_id')->nullable()->constrained('order_items')->nullOnDelete();
         });
     }
 
