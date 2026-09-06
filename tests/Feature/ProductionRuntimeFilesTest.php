@@ -1,0 +1,33 @@
+<?php
+
+namespace Tests\Feature;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\TestCase;
+
+class ProductionRuntimeFilesTest extends TestCase
+{
+    #[DataProvider('runtimeFiles')]
+    public function test_required_runtime_file_exists_and_is_not_empty(string $relativePath): void
+    {
+        $path = base_path($relativePath);
+
+        $this->assertFileExists($path);
+        $this->assertGreaterThan(0, filesize($path));
+    }
+
+    public static function runtimeFiles(): array
+    {
+        return array_map(fn (string $path): array => [$path], [
+            'Dockerfile',
+            '.dockerignore',
+            'compose.production.yaml',
+            'docker/entrypoint.sh',
+            'docker/nginx.conf',
+            'docker/supervisord.conf',
+            'docker/runtime-smoke.sh',
+            'docs/DEPLOYMENT.md',
+            'docs/BACKUP-RESTORE.md',
+        ]);
+    }
+}

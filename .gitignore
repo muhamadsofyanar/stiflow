@@ -1,0 +1,92 @@
+# ==========================================================
+# STIFLOW Per-Cabang Deployment - Laravel Standard + Custom
+# ==========================================================
+
+# ---- Env & Credentials (JANGAN PERNAH di-upload) ----
+.env
+.env.backup
+.env.production
+.env.staging
+.auth.json
+
+# ---- IDE & Editor ----
+.phpactor.json
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+/.trae/
+
+# ---- Composer & NPM Dependencies (install dari lock file) ----
+/node_modules
+/vendor/
+/_chome2/
+
+# ---- Build Artifacts Vite (rebuild per install via npm run build) ----
+/public/build
+/public/hot
+
+# ---- Storage Sementara (runtime generated) ----
+/public/storage
+/storage/*.key
+/storage/pail
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing/*
+/storage/app/private/*
+!/storage/**/.gitignore
+
+# ---- Database File SQLite (berisi data CABANG, berbeda tiap instansi, JANGAN di-upload) ----
+/database/database.sqlite
+/database/*.sqlite
+/database/*.sqlite-journal
+/database/*.sqlite-wal
+/database/*.sqlite-shm
+
+# ---- PHPUnit & Testing Cache ----
+.phpunit.result.cache
+/.phpunit.cache
+.phpunit.result.cache
+
+# ---- OS / Finder Sampah ----
+*.log
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---- References ZIP & PDF (arsitektur doc & plugin backup - simpan di Google Drive / folder terpisah) ----
+/refs/*.zip
+/refs/*.pdf
+
+# ---- Temporary Files Trae / Runtime (pid, log install, ck, dll) ----
+serve.pid
+_*.log
+_*.txt
+_*.ps1
+_*.flag
+_install.*
+install_*.log
+install_*.flag
+install_result.*
+full_test.*
+seedlog.txt
+list_produk.php
+chk.php
+s.php
+cc.php
+st.php
+check_prod_status.php
+db_status.php
+db_final_check.php
+seedlog.txt
+*.log
+*.txt.tmp
+
+# ---- Deployment Files Opsional (jika butuh, taro di branch deploy terpisah) ----
+Homestead.json
+Homestead.yaml
+docker-compose.override.yml
