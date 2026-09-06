@@ -33,7 +33,10 @@ return new class extends Migration
             $table->string('webhook_secret_fingerprint', 64)->nullable();
             $table->json('health_check_last_result_json')->nullable();
             $table->timestamps();
-            $table->index(['provider_category', 'provider_type', 'is_active']);
+            $table->index(
+                ['provider_category', 'provider_type', 'is_active'],
+                'integration_connections_provider_lookup_idx',
+            );
         });
     }
 
