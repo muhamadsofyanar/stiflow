@@ -96,4 +96,27 @@ class ProductionSafetyTest extends TestCase
 
         $this->assertSame(401, $response->getStatusCode());
     }
+
+    public function test_production_image_removes_development_package_cache(): void
+    {
+        $dockerfile = file_get_contents(base_path('Dockerfile'));
+
+        $this->assertIsString($dockerfile);
+        $this->assertStringContainsString('rm -f bootstrap/cache/*.php', $dockerfile);
+        $this->assertLessThan(
+            strpos($dockerfile, 'ENTRYPOINT'),
+            strpos($dockerfile, 'rm -f bootstrap/cache/*.php'),
+        );
+    }
+
+    public function test_non_root_nginx_runtime_directories_are_writable(): void
+    {
+        $dockerfile = file_get_contents(base_path('Dockerfile'));
+
+        $this->assertIsString($dockerfile);
+        $this->assertStringContainsString('/var/lib/nginx/logs', $dockerfile);
+        $this->assertStringContainsString('/var/lib/nginx/tmp/uwsgi', $dockerfile);
+        $this->assertStringContainsString('/var/lib/nginx/tmp/scgi', $dockerfile);
+        $this->assertStringContainsString('chown -R www-data:www-data storage bootstrap/cache /tmp/nginx /var/lib/nginx', $dockerfile);
+    }
 }

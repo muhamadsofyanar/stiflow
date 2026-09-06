@@ -4,12 +4,12 @@
 
 - Docker Engine dan Compose v2 atau Coolify.
 - DNS HTTPS menuju service `app` port 8080.
-- MySQL 8, satu database khusus untuk satu cabang.
+- MariaDB 11.4, satu database khusus untuk satu cabang.
 - Kredensial API STIFIN untuk cabang tersebut.
 
 ## Environment wajib
 
-Salin `.env.example` menjadi `.env`. Isi minimal `APP_KEY`, `APP_URL`, `BRANCH_CODE`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `DB_ROOT_PASSWORD`, `STIFIN_API_BASE_URL`, `STIFIN_AUTH_HEADER`, `STIFIN_AUTH_VALUE`, dan `STIFIN_USER_ID`. Buat key dengan `php artisan key:generate --show`; jangan memakai key dari cabang lain.
+Salin `.env.example` menjadi `.env`. Isi minimal `APP_KEY`, `APP_URL`, `BRANCH_CODE`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `DB_ROOT_PASSWORD`, `MANUAL_TRANSFER_BANK`, `MANUAL_TRANSFER_ACCOUNT`, `MANUAL_TRANSFER_HOLDER`, `STIFIN_API_BASE_URL`, `STIFIN_AUTH_HEADER`, `STIFIN_AUTH_VALUE`, dan `STIFIN_USER_ID`. Buat key dengan `php artisan key:generate --show`; jangan memakai key dari cabang lain.
 
 Gunakan `DB_CONNECTION=mysql`, `QUEUE_CONNECTION=database`, `APP_ENV=production`, dan `APP_DEBUG=false`. Fase Voucher MVP hanya mengaktifkan transfer manual. Jangan isi atau mengaktifkan gateway simulasi.
 
@@ -19,12 +19,13 @@ Gunakan `DB_CONNECTION=mysql`, `QUEUE_CONNECTION=database`, `APP_ENV=production`
 docker compose -f compose.production.yaml build
 docker compose -f compose.production.yaml up -d db
 docker compose -f compose.production.yaml run --rm app php artisan migrate --force
+docker compose -f compose.production.yaml run --rm app php artisan db:seed --class=ProductionBootstrapSeeder --force
 docker compose -f compose.production.yaml up -d app worker scheduler
 curl --fail https://DOMAIN-CABANG/up
 docker compose -f compose.production.yaml exec app php artisan migrate:status
 ```
 
-Masukkan `branch_settings`, produk voucher, rekening transfer, admin pertama, dan kredensial STIFIN melalui prosedur onboarding cabang. Worker memakai `--tries=1`; hasil POST yang tidak pasti harus masuk rekonsiliasi dan tidak boleh diulang otomatis.
+`ProductionBootstrapSeeder` hanya membuat identitas cabang dan produk Voucher MVP secara idempoten. Seeder tersebut tidak membuat akun demo dan aman dijalankan ulang. Buat admin pertama secara eksplisit, lalu sesuaikan identitas cabang serta rekening melalui menu Pengaturan. Worker memakai `--tries=1`; hasil POST yang tidak pasti harus masuk rekonsiliasi dan tidak boleh diulang otomatis.
 
 ## Update aman
 
@@ -40,4 +41,4 @@ Rollback aplikasi berarti mengembalikan tag image sebelumnya. Jangan menjalankan
 
 ## Coolify
 
-Pilih Docker Compose, gunakan `compose.production.yaml`, pasang persistent volume database dan `/var/www/html/storage`, arahkan domain hanya ke service `app:8080`, dan jangan mengekspos service `db`, `worker`, atau `scheduler`.
+Pilih Docker Compose, gunakan `compose.production.yaml`, pasang persistent volume database dan `/var/www/html/storage`, arahkan domain hanya ke service `app:8080`, dan jangan mengekspos service `db`, `worker`, atau `scheduler`. Konfigurasi produksi menetapkan `STIFLOW_PROTOTYPE_MODULES=false`, sehingga menu modul yang belum selesai tidak ditampilkan.

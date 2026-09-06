@@ -3,6 +3,7 @@ name: stiflow
 x-app-environment: &app-environment
   APP_ENV: production
   APP_DEBUG: "false"
+  STIFLOW_PROTOTYPE_MODULES: "false"
   DB_CONNECTION: mysql
   DB_HOST: db
   DB_PORT: "3306"

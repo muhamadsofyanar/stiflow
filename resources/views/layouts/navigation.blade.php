@@ -12,6 +12,9 @@
                     @auth
                         @if(auth()->user()->isStaffOrAbove())
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Dashboard</x-nav-link>
+                            <x-nav-link :href="route('admin.promotors.index')" :active="request()->routeIs('admin.promotors.*')">Promotor</x-nav-link>
+                            <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Produk Voucher</x-nav-link>
+                            @if(config('stiflow.prototype_modules_enabled'))
                             <x-nav-link :href="route('admin.contacts.index')" :active="request()->routeIs('admin.contacts.*')">CRM</x-nav-link>
                             <x-dropdown>
                                 <x-slot name="trigger">
@@ -52,6 +55,7 @@
                                 </x-slot>
                             </x-dropdown>
                             <x-nav-link :href="route('admin.integrations.index')" :active="request()->routeIs('admin.integrations.*')">Integrations</x-nav-link>
+                            @endif
                             <x-dropdown>
                                 <x-slot name="trigger">
                                     <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -62,9 +66,11 @@
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('admin.orders.index')">Orders</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.reconciliation.index')">Rekonsiliasi</x-dropdown-link>
+                                    @if(config('stiflow.prototype_modules_enabled'))
                                     <x-dropdown-link :href="route('admin.points-ledger.index')">Points Ledger</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.staff.permissions')">Staff Permissions</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.audit.index')">Audit Logs</x-dropdown-link>
+                                    @endif
                                     <x-dropdown-link :href="route('admin.branch-settings.edit')">Pengaturan</x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
@@ -72,6 +78,7 @@
                             <x-nav-link :href="route('promotor.dashboard')" :active="request()->routeIs('promotor.dashboard')">Dashboard</x-nav-link>
                             <x-nav-link :href="route('promotor.checkout.index')" :active="request()->routeIs('promotor.checkout.*')">Beli Voucher</x-nav-link>
                             <x-nav-link :href="route('promotor.orders.index')" :active="request()->routeIs('promotor.orders.*')">Order Saya</x-nav-link>
+                            @if(config('stiflow.prototype_modules_enabled'))
                             <x-nav-link :href="route('promotor.crm.index')" :active="request()->routeIs('promotor.crm.*')">CRM</x-nav-link>
                             <x-dropdown>
                                 <x-slot name="trigger">
@@ -100,12 +107,15 @@
                                     <x-dropdown-link :href="route('promotor.unduhan.index')">Unduhan</x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
+                            @endif
                         @else
                             <x-nav-link :href="route('member.dashboard')" :active="request()->routeIs('member.*')">Member</x-nav-link>
+                            @if(config('stiflow.prototype_modules_enabled'))
                             <x-nav-link :href="route('member.orders.index')" :active="request()->routeIs('member.orders.*')">Pesanan</x-nav-link>
                             <x-nav-link :href="route('member.kelas.index')" :active="request()->routeIs('member.kelas.*')">Kelas</x-nav-link>
                             <x-nav-link :href="route('member.lisensi.index')" :active="request()->routeIs('member.lisensi.*')">Lisensi</x-nav-link>
                             <x-nav-link :href="route('member.poin.index')" :active="request()->routeIs('member.poin.*')">Poin</x-nav-link>
+                            @endif
                         @endif
                     @endauth
                 </div>
@@ -156,6 +166,12 @@
             @auth
                 @if(auth()->user()->isStaffOrAbove())
                     <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Dashboard</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">Orders</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.promotors.index')" :active="request()->routeIs('admin.promotors.*')">Promotor</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Produk Voucher</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.reconciliation.index')" :active="request()->routeIs('admin.reconciliation.*')">Rekonsiliasi</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.branch-settings.edit')" :active="request()->routeIs('admin.branch-settings.*')">Pengaturan</x-responsive-nav-link>
+                    @if(config('stiflow.prototype_modules_enabled'))
                     <x-responsive-nav-link :href="route('admin.contacts.index')" :active="request()->routeIs('admin.contacts.*')">CRM</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.pipelines.index')" :active="request()->routeIs('admin.pipelines.*')">Pipeline</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.campaigns.index')" :active="request()->routeIs('admin.campaigns.*')">Campaign</x-responsive-nav-link>
@@ -169,14 +185,12 @@
                     <x-responsive-nav-link :href="route('admin.points-ledger.index')" :active="request()->routeIs('admin.points-ledger.*')">Points Ledger</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.staff.permissions')" :active="request()->routeIs('admin.staff.*')">Staff Permissions</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.audit.index')" :active="request()->routeIs('admin.audit.*')">Audit Logs</x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">Orders</x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.reconciliation.index')" :active="request()->routeIs('admin.reconciliation.*')">Rekonsiliasi</x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Produk Voucher</x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.branch-settings.edit')" :active="request()->routeIs('admin.branch-settings.*')">Pengaturan</x-responsive-nav-link>
+                    @endif
                 @elseif(auth()->user()->isPromotor())
                     <x-responsive-nav-link :href="route('promotor.dashboard')" :active="request()->routeIs('promotor.dashboard')">Dashboard</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('promotor.checkout.index')" :active="request()->routeIs('promotor.checkout.*')">Beli Voucher</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('promotor.orders.index')" :active="request()->routeIs('promotor.orders.*')">Order Saya</x-responsive-nav-link>
+                    @if(config('stiflow.prototype_modules_enabled'))
                     <x-responsive-nav-link :href="route('promotor.crm.index')" :active="request()->routeIs('promotor.crm.*')">CRM Saya</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('promotor.crm.boards')" :active="request()->routeIs('promotor.crm.boards*')">CRM Board</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('promotor.affiliate.tree')" :active="request()->routeIs('promotor.affiliate.*')">Pohon Sponsor</x-responsive-nav-link>
@@ -186,8 +200,10 @@
                     <x-responsive-nav-link :href="route('promotor.kelas-saya.index')" :active="request()->routeIs('promotor.kelas-saya.*')">Kelas Saya</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('promotor.hasil-stifin.index')" :active="request()->routeIs('promotor.hasil-stifin.*')">Hasil STIFIN</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('promotor.unduhan.index')" :active="request()->routeIs('promotor.unduhan.*')">Unduhan</x-responsive-nav-link>
+                    @endif
                 @else
                     <x-responsive-nav-link :href="route('member.dashboard')" :active="request()->routeIs('member.dashboard')">Dashboard</x-responsive-nav-link>
+                    @if(config('stiflow.prototype_modules_enabled'))
                     <x-responsive-nav-link :href="route('member.orders.index')" :active="request()->routeIs('member.orders.*')">Pesanan</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('member.kelas.index')" :active="request()->routeIs('member.kelas.*')">Kelas</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('member.hasil-stifin.index')" :active="request()->routeIs('member.hasil-stifin.*')">Hasil STIFIN</x-responsive-nav-link>
@@ -195,6 +211,7 @@
                     <x-responsive-nav-link :href="route('member.lisensi.index')" :active="request()->routeIs('member.lisensi.*')">Lisensi</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('member.poin.index')" :active="request()->routeIs('member.poin.*')">Poin</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('member.profil.index')" :active="request()->routeIs('member.profil.*')">Profil</x-responsive-nav-link>
+                    @endif
                 @endif
             @endauth
         </div>

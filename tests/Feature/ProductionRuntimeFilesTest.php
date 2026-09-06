@@ -27,7 +27,16 @@ class ProductionRuntimeFilesTest extends TestCase
             'docker/supervisord.conf',
             'docker/runtime-smoke.sh',
             'docs/DEPLOYMENT.md',
+            'docs/COOLIFY-UPDATE.md',
             'docs/BACKUP-RESTORE.md',
         ]);
+    }
+
+    public function test_production_compose_disables_prototype_modules(): void
+    {
+        $compose = file_get_contents(base_path('compose.production.yaml'));
+
+        $this->assertIsString($compose);
+        $this->assertStringContainsString('STIFLOW_PROTOTYPE_MODULES: "false"', $compose);
     }
 }
