@@ -61,6 +61,7 @@ class ProductionBootstrapTest extends TestCase
     public function test_voucher_mvp_navigation_exposes_only_working_admin_pages(): void
     {
         config()->set('stiflow.prototype_modules_enabled', false);
+        config()->set('stiflow.admin_extended_modules_enabled', false);
         $this->seed(ProductionBootstrapSeeder::class);
 
         $admin = User::factory()->create([

@@ -38,10 +38,10 @@ class PermissionMatrixEdit extends Component
     public function render()
     {
         $permissions = Permission::query()
-            ->orderBy('group_key')
+            ->orderBy('group')
             ->orderBy('key')
             ->get()
-            ->groupBy('group_key');
+            ->groupBy('group');
 
         $targetUser = User::query()->findOrFail($this->userId);
 

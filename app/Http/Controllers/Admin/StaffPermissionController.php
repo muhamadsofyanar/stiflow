@@ -21,7 +21,7 @@ class StaffPermissionController extends Controller
             ->latest()
             ->paginate(20);
 
-        $permissions = Permission::query()->orderBy('group_key')->orderBy('key')->get()->groupBy('group_key');
+        $permissions = Permission::query()->orderBy('group')->orderBy('key')->get()->groupBy('group');
 
         return view('admin.staff.permissions', compact('staff', 'permissions'));
     }

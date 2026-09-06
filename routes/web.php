@@ -86,16 +86,26 @@ Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.'
 Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::resource('contacts', \App\Http\Controllers\Admin\ContactController::class);
     Route::resource('pipelines', \App\Http\Controllers\Admin\PipelineController::class);
-    Route::resource('pipelines.stages', \App\Http\Controllers\Admin\PipelineController::class)->only(['store', 'update', 'destroy']);
-    Route::resource('products-catalog', \App\Http\Controllers\Admin\ProductCatalogController::class);
+    Route::post('pipelines/{pipeline}/stages', [\App\Http\Controllers\Admin\PipelineController::class, 'storeStage'])->name('pipelines.stages.store');
+    Route::put('pipelines/{pipeline}/stages/{stage}', [\App\Http\Controllers\Admin\PipelineController::class, 'updateStage'])->name('pipelines.stages.update');
+    Route::delete('pipelines/{pipeline}/stages/{stage}', [\App\Http\Controllers\Admin\PipelineController::class, 'destroyStage'])->name('pipelines.stages.destroy');
+    Route::resource('products-catalog', \App\Http\Controllers\Admin\ProductCatalogController::class)
+        ->parameters(['products-catalog' => 'product']);
     Route::resource('variants', \App\Http\Controllers\Admin\VariantController::class);
     Route::resource('courses', \App\Http\Controllers\Admin\CourseManagementController::class);
     Route::resource('stifin-results', \App\Http\Controllers\Admin\StifinResultAdminController::class);
     Route::resource('campaigns', \App\Http\Controllers\Admin\CampaignAdminController::class);
     Route::resource('templates', \App\Http\Controllers\Admin\MessageTemplateAdminController::class);
-    Route::resource('lists', \App\Http\Controllers\Admin\CampaignAdminController::class);
-    Route::resource('segments', \App\Http\Controllers\Admin\CampaignAdminController::class);
+    Route::get('lists', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'listIndex'])->name('lists.index');
+    Route::post('lists', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'storeList'])->name('lists.store');
+    Route::put('lists/{list}', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'updateList'])->name('lists.update');
+    Route::delete('lists/{list}', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'destroyList'])->name('lists.destroy');
+    Route::get('segments', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'segmentIndex'])->name('segments.index');
+    Route::post('segments', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'storeSegment'])->name('segments.store');
+    Route::put('segments/{segment}', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'updateSegment'])->name('segments.update');
+    Route::delete('segments/{segment}', [\App\Http\Controllers\Admin\CampaignAdminController::class, 'destroySegment'])->name('segments.destroy');
     Route::get('integrations', [\App\Http\Controllers\Admin\IntegrationConnectionController::class, 'index'])->name('integrations.index')->middleware('can:integrations.manage');
+    Route::get('integrations/create', [\App\Http\Controllers\Admin\IntegrationConnectionController::class, 'create'])->name('integrations.create')->middleware('can:integrations.manage');
     Route::get('integrations/{integration}/edit', [\App\Http\Controllers\Admin\IntegrationConnectionController::class, 'edit'])->name('integrations.edit')->middleware('can:integrations.manage');
     Route::put('integrations/{integration}', [\App\Http\Controllers\Admin\IntegrationConnectionController::class, 'update'])->name('integrations.update')->middleware('can:integrations.manage');
     Route::post('integrations', [\App\Http\Controllers\Admin\IntegrationConnectionController::class, 'store'])->name('integrations.store')->middleware('can:integrations.manage');

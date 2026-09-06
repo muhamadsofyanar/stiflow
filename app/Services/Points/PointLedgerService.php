@@ -262,6 +262,42 @@ class PointLedgerService
         });
     }
 
+    public function adjust(
+        int $userId,
+        string $direction,
+        int $amountPoints,
+        string $reasonText,
+        User $actor,
+    ): PointLedgerEntry {
+        if (! in_array($direction, ['credit', 'debit'], true) || $amountPoints <= 0) {
+            throw new InvalidArgumentException('Penyesuaian poin tidak valid.');
+        }
+
+        return DB::transaction(function () use ($userId, $direction, $amountPoints, $reasonText, $actor) {
+            User::query()->whereKey($userId)->lockForUpdate()->firstOrFail();
+            $balance = $this->lockAndGetBalance($userId);
+            $isCredit = $direction === 'credit';
+            $newBalance = $isCredit ? $balance + $amountPoints : $balance - $amountPoints;
+
+            if ($newBalance < 0) {
+                throw new RuntimeException('Saldo poin tidak mencukupi.');
+            }
+
+            return PointLedgerEntry::query()->create([
+                'user_id' => $userId,
+                'entry_type' => PointEntryType::Adjustment,
+                'direction' => $isCredit ? PointDirection::Credit : PointDirection::Debit,
+                'amount_points' => $amountPoints,
+                'balance_after_points' => $newBalance,
+                'reason_code' => 'manual_adjustment',
+                'reason_text' => $reasonText,
+                'reference_id' => 'adjust-'.$userId.'-'.now()->timestamp.'-'.Str::random(8),
+                'performed_by_user_id' => $actor->id,
+                'meta_json' => ['source' => 'admin'],
+            ]);
+        }, 3);
+    }
+
     private function lockAndGetBalance(int $userId): int
     {
         $rows = DB::table('point_ledger_entries')

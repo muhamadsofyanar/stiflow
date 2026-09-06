@@ -2,6 +2,7 @@
 
 return [
     'prototype_modules_enabled' => env('STIFLOW_PROTOTYPE_MODULES', true),
+    'admin_extended_modules_enabled' => env('STIFLOW_ADMIN_EXTENDED_MODULES', true),
 
     'branch' => [
         'branch_code' => env('BRANCH_CODE', 'CABANG-SETUP'),

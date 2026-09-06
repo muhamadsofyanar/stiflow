@@ -8,6 +8,7 @@ use App\Models\PipelineStage;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PipelineController extends Controller
 {
@@ -28,10 +29,14 @@ class PipelineController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'is_active' => 'boolean',
+            'is_default' => 'boolean',
         ]);
 
-        Pipeline::query()->create($validated);
+        if ($validated['is_default'] ?? false) {
+            Pipeline::query()->update(['is_default' => false]);
+        }
+
+        Pipeline::query()->create([...$validated, 'owner_user_id' => $request->user()->id]);
 
         return redirect()->route('admin.pipelines.index')->with('status', 'Pipeline dibuat.');
     }
@@ -50,11 +55,17 @@ class PipelineController extends Controller
 
     public function update(Request $request, Pipeline $pipeline): RedirectResponse
     {
-        $pipeline->update($request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'is_active' => 'boolean',
-        ]));
+            'is_default' => 'boolean',
+        ]);
+
+        if ($validated['is_default'] ?? false) {
+            Pipeline::query()->whereKeyNot($pipeline->id)->update(['is_default' => false]);
+        }
+
+        $pipeline->update($validated);
 
         return redirect()->route('admin.pipelines.index')->with('status', 'Pipeline diperbarui.');
     }
@@ -68,30 +79,63 @@ class PipelineController extends Controller
 
     public function storeStage(Request $request, Pipeline $pipeline): RedirectResponse
     {
-        $pipeline->stages()->create($request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'nullable|integer|min:0',
-            'win_probability' => 'nullable|integer|min:0|max:100',
-        ]));
+            'color_hex' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'is_won_stage' => 'boolean',
+            'is_lost_stage' => 'boolean',
+        ]);
+
+        $lastPosition = $pipeline->stages()->max('position');
+
+        $pipeline->stages()->create([
+            ...$validated,
+            'slug' => $this->uniqueStageSlug($pipeline, $validated['name']),
+            'position' => $validated['position'] ?? ($lastPosition === null ? 0 : (int) $lastPosition + 1),
+        ]);
 
         return back()->with('status', 'Stage ditambahkan.');
     }
 
     public function updateStage(Request $request, Pipeline $pipeline, PipelineStage $stage): RedirectResponse
     {
-        $stage->update($request->validate([
+        abort_unless($stage->pipeline_id === $pipeline->id, 404);
+
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'position' => 'nullable|integer|min:0',
-            'win_probability' => 'nullable|integer|min:0|max:100',
-        ]));
+            'color_hex' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'is_won_stage' => 'boolean',
+            'is_lost_stage' => 'boolean',
+        ]);
+
+        $stage->update([
+            ...$validated,
+            'slug' => $this->uniqueStageSlug($pipeline, $validated['name'], $stage),
+        ]);
 
         return back()->with('status', 'Stage diperbarui.');
     }
 
     public function destroyStage(Pipeline $pipeline, PipelineStage $stage): RedirectResponse
     {
+        abort_unless($stage->pipeline_id === $pipeline->id, 404);
         $stage->delete();
 
         return back()->with('status', 'Stage dihapus.');
+    }
+
+    private function uniqueStageSlug(Pipeline $pipeline, string $name, ?PipelineStage $except = null): string
+    {
+        $base = Str::slug($name) ?: 'stage';
+        $slug = $base;
+        $suffix = 2;
+
+        while ($pipeline->stages()->where('slug', $slug)->when($except, fn ($query) => $query->whereKeyNot($except->id))->exists()) {
+            $slug = $base.'-'.$suffix++;
+        }
+
+        return $slug;
     }
 }

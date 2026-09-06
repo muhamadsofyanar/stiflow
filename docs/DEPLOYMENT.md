@@ -25,7 +25,7 @@ curl --fail https://DOMAIN-CABANG/up
 docker compose -f compose.production.yaml exec app php artisan migrate:status
 ```
 
-`ProductionBootstrapSeeder` hanya membuat identitas cabang dan produk Voucher MVP secara idempoten. Seeder tersebut tidak membuat akun demo dan aman dijalankan ulang. Buat admin pertama secara eksplisit, lalu sesuaikan identitas cabang serta rekening melalui menu Pengaturan. Worker memakai `--tries=1`; hasil POST yang tidak pasti harus masuk rekonsiliasi dan tidak boleh diulang otomatis.
+`ProductionBootstrapSeeder` membuat identitas cabang, produk Voucher MVP, konfigurasi voucher, dan katalog permission secara idempoten. Seeder tersebut tidak membuat akun demo dan aman dijalankan ulang. Buat admin pertama secara eksplisit, lalu sesuaikan identitas cabang serta rekening melalui menu Pengaturan. Worker memakai `--tries=1`; hasil POST yang tidak pasti harus masuk rekonsiliasi dan tidak boleh diulang otomatis.
 
 ## Update aman
 
@@ -41,4 +41,4 @@ Rollback aplikasi berarti mengembalikan tag image sebelumnya. Jangan menjalankan
 
 ## Coolify
 
-Pilih Docker Compose, gunakan `compose.production.yaml`, pasang persistent volume database dan `/var/www/html/storage`, arahkan domain hanya ke service `app:8080`, dan jangan mengekspos service `db`, `worker`, atau `scheduler`. Konfigurasi produksi menetapkan `STIFLOW_PROTOTYPE_MODULES=false`, sehingga menu modul yang belum selesai tidak ditampilkan.
+Pilih Docker Compose, gunakan `compose.production.yaml`, pasang persistent volume database dan `/var/www/html/storage`, arahkan domain hanya ke service `app:8080`, dan jangan mengekspos service `db`, `worker`, atau `scheduler`. Konfigurasi produksi menetapkan `STIFLOW_ADMIN_EXTENDED_MODULES=true` untuk modul admin yang sudah diuji dan `STIFLOW_PROTOTYPE_MODULES=false` untuk menyembunyikan menu promotor/member yang masih eksperimental.

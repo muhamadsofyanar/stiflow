@@ -29,8 +29,11 @@ class ProductCatalogController extends Controller
             'slug' => 'required|string|max:255|unique:products,slug',
             'type' => 'required|string',
             'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:draft,active,inactive',
+            'visibility' => 'required|in:public,login_only,segment_only,hidden_link',
+            'is_published' => 'boolean',
+            'is_catalog_visible' => 'boolean',
         ]);
 
         Product::query()->create($validated);
@@ -40,7 +43,7 @@ class ProductCatalogController extends Controller
 
     public function show(Product $product): View
     {
-        $product->load(['variants', 'bumps']);
+        $product->load(['variants', 'orderBumps']);
 
         return view('admin.products-catalog.show', compact('product'));
     }
@@ -57,8 +60,11 @@ class ProductCatalogController extends Controller
             'slug' => 'required|string|max:255|unique:products,slug,'.$product->id,
             'type' => 'required|string',
             'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-            'is_active' => 'boolean',
+            'price' => 'required|numeric|min:0',
+            'status' => 'required|in:draft,active,inactive',
+            'visibility' => 'required|in:public,login_only,segment_only,hidden_link',
+            'is_published' => 'boolean',
+            'is_catalog_visible' => 'boolean',
         ]));
 
         return redirect()->route('admin.products-catalog.index')->with('status', 'Produk diperbarui.');

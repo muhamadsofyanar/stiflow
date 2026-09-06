@@ -14,12 +14,12 @@
 | Coolify/Docker deployment | architecture | No | Blocker | 1 |
 | Backup and tested restore | architecture | No | Blocker | 1 |
 | Payment gateway | prototype mocks | Simulated only | Disabled | 2 |
-| Product catalog and checkout | SEJOLI/STIFLow | Partial | Placeholder test coverage | 3 |
+| Product catalog and checkout | SEJOLI/STIFLow | Yes | Admin product/variant CRUD verified; checkout pilot still required | 3 |
 | Member entitlement | SEJOLI/STIFLow | Partial | Placeholder test coverage | 3 |
 | WordPress production migration | WordPress/SEJOLI | No | Awaiting dump/export | 3 |
-| CRM and lead ownership | public site/STIFLow | Partial | Not release-gated | 4 |
+| CRM and lead ownership | public site/STIFLow | Partial | Admin contacts and pipeline baseline verified | 4 |
 | Referral tree and commissions | SEJOLI/STIFLow | Partial | Placeholder test coverage | 4 |
-| LMS, quiz, progress | DW SEJOLI LMS/STIFLow | Partial | Placeholder test coverage | 5 |
+| LMS, quiz, progress | DW SEJOLI LMS/STIFLow | Partial | Admin course baseline verified; lesson/quiz pilot pending | 5 |
 | Signed public-site integration | Next.js | No | Contract not implemented | 6 |
 | White-label installer/update | STIFLow mocks | Simulated only | Not usable | 7 |
 

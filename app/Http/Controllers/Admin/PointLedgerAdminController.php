@@ -2,16 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enums\PointDirection;
-use App\Enums\PointEntryType;
 use App\Http\Controllers\Controller;
 use App\Models\PointLedgerEntry;
+use App\Services\Points\PointLedgerService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use InvalidArgumentException;
+use RuntimeException;
 
 class PointLedgerAdminController extends Controller
 {
+    public function __construct(private readonly PointLedgerService $pointLedgerService)
+    {
+    }
+
     public function index(Request $request): View
     {
         $query = PointLedgerEntry::query()->with(['user'])->latest();
@@ -31,18 +36,22 @@ class PointLedgerAdminController extends Controller
             'user_id' => 'required|exists:users,id',
             'direction' => 'required|in:credit,debit',
             'amount_points' => 'required|integer|min:1',
-            'entry_type' => 'required|string',
-            'reference_type' => 'nullable|string|max:100',
-            'reference_id' => 'nullable|string|max:100',
-            'notes' => 'nullable|string|max:500',
+            'notes' => 'required|string|max:500',
         ]);
 
-        PointLedgerEntry::query()->create([
-            ...$validated,
-            'direction' => $validated['direction'] === 'credit' ? PointDirection::Credit : PointDirection::Debit,
-            'entry_type' => $validated['entry_type'] ?? PointEntryType::ManualAdjustment,
-            'created_by_user_id' => auth()->id(),
-        ]);
+        try {
+            $this->pointLedgerService->adjust(
+                userId: (int) $validated['user_id'],
+                direction: $validated['direction'],
+                amountPoints: (int) $validated['amount_points'],
+                reasonText: $validated['notes'],
+                actor: $request->user(),
+            );
+        } catch (InvalidArgumentException|RuntimeException $exception) {
+            return back()
+                ->withInput()
+                ->withErrors(['amount_points' => $exception->getMessage()]);
+        }
 
         return back()->with('status', 'Entry poin ditambahkan.');
     }

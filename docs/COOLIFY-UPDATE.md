@@ -30,7 +30,7 @@ docker exec -it "$APP_CONTAINER" php artisan config:cache
 docker exec -it "$APP_CONTAINER" php artisan view:cache
 ```
 
-Seeder tersebut aman dijalankan ulang. Ia hanya membuat satu data cabang dan satu produk voucher apabila belum ada; akun pengguna tidak dibuat atau dihapus.
+Seeder tersebut aman dijalankan ulang. Ia membuat data awal cabang, produk voucher, konfigurasi voucher, dan katalog permission secara idempoten; akun pengguna tidak dibuat atau dihapus.
 
 ## 4. Periksa hasil
 
@@ -43,6 +43,15 @@ Buka halaman berikut:
 - `/admin/orders`
 - `/admin/reconciliation`
 - `/admin/settings/branch`
+- `/admin/courses`
+- `/admin/products-catalog`
+- `/admin/stifin-results`
+- `/admin/campaigns`
+- `/admin/templates`
+- `/admin/pipelines`
+- `/admin/integrations`
+- `/admin/points-ledger`
+- `/admin/staff/permissions`
+- `/admin/audit`
 
-Modul prototipe yang belum memiliki tampilan lengkap disembunyikan dari navigasi produksi agar pengguna tidak masuk ke halaman 500. Data dan route modul tersebut tidak dihapus.
-
+Modul admin lanjutan diaktifkan dengan `STIFLOW_ADMIN_EXTENDED_MODULES=true`. Menu promotor/member yang masih eksperimental tetap disembunyikan dengan `STIFLOW_PROTOTYPE_MODULES=false`.

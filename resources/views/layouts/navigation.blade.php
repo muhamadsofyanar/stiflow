@@ -14,7 +14,7 @@
                             <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">Dashboard</x-nav-link>
                             <x-nav-link :href="route('admin.promotors.index')" :active="request()->routeIs('admin.promotors.*')">Promotor</x-nav-link>
                             <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Produk Voucher</x-nav-link>
-                            @if(config('stiflow.prototype_modules_enabled'))
+                            @if(config('stiflow.admin_extended_modules_enabled'))
                             <x-nav-link :href="route('admin.contacts.index')" :active="request()->routeIs('admin.contacts.*')">CRM</x-nav-link>
                             <x-dropdown>
                                 <x-slot name="trigger">
@@ -51,6 +51,8 @@
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('admin.campaigns.index')">Campaign</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.templates.index')">Message Templates</x-dropdown-link>
+                                    <x-dropdown-link :href="route('admin.lists.index')">Daftar Kontak</x-dropdown-link>
+                                    <x-dropdown-link :href="route('admin.segments.index')">Segmen</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.pipelines.index')">Pipeline CRM</x-dropdown-link>
                                 </x-slot>
                             </x-dropdown>
@@ -66,7 +68,7 @@
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('admin.orders.index')">Orders</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.reconciliation.index')">Rekonsiliasi</x-dropdown-link>
-                                    @if(config('stiflow.prototype_modules_enabled'))
+                                    @if(config('stiflow.admin_extended_modules_enabled'))
                                     <x-dropdown-link :href="route('admin.points-ledger.index')">Points Ledger</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.staff.permissions')">Staff Permissions</x-dropdown-link>
                                     <x-dropdown-link :href="route('admin.audit.index')">Audit Logs</x-dropdown-link>
@@ -171,11 +173,13 @@
                     <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">Produk Voucher</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.reconciliation.index')" :active="request()->routeIs('admin.reconciliation.*')">Rekonsiliasi</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.branch-settings.edit')" :active="request()->routeIs('admin.branch-settings.*')">Pengaturan</x-responsive-nav-link>
-                    @if(config('stiflow.prototype_modules_enabled'))
+                    @if(config('stiflow.admin_extended_modules_enabled'))
                     <x-responsive-nav-link :href="route('admin.contacts.index')" :active="request()->routeIs('admin.contacts.*')">CRM</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.pipelines.index')" :active="request()->routeIs('admin.pipelines.*')">Pipeline</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.campaigns.index')" :active="request()->routeIs('admin.campaigns.*')">Campaign</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.templates.index')" :active="request()->routeIs('admin.templates.*')">Templates</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.lists.index')" :active="request()->routeIs('admin.lists.*')">Daftar Kontak</x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('admin.segments.index')" :active="request()->routeIs('admin.segments.*')">Segmen</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.courses.index')" :active="request()->routeIs('admin.courses.*')">Kursus (LMS)</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.products-catalog.index')" :active="request()->routeIs('admin.products-catalog.*')">Katalog Produk</x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('admin.stifin-results.index')" :active="request()->routeIs('admin.stifin-results.*')">Hasil STIFIN</x-responsive-nav-link>

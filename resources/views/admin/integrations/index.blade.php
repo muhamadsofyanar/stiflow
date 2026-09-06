@@ -18,12 +18,12 @@
                 @foreach($integrations as $int)
                     <div class="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm p-6">
                         <div class="flex items-center justify-between mb-3">
-                            <div class="font-bold text-gray-900 dark:text-white">{{ $int->name }}</div>
+                            <div class="font-bold text-gray-900 dark:text-white">{{ $int->display_name }}</div>
                             <x-status-badge :value="$int->status?->value ?? $int->status" />
                         </div>
                         <div class="text-sm text-gray-500 mb-2">
-                            <span class="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded text-xs font-mono">{{ $int->provider }}</span>
-                            <span class="ml-2 text-xs">{{ $int->category }}</span>
+                            <span class="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 rounded text-xs font-mono">{{ $int->provider_type }}</span>
+                            <span class="ml-2 text-xs">{{ $int->provider_category?->value ?? $int->provider_category }}</span>
                         </div>
                         <div class="text-xs text-gray-400 mb-4">
                             Terakhir diuji: {{ $int->last_tested_at?->format('Y-m-d H:i') ?? 'Belum pernah' }}
