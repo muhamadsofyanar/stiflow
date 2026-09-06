@@ -37,7 +37,8 @@ COPY --from=frontend --chown=www-data:www-data /build/public/build ./public/buil
 COPY docker/nginx.conf /etc/nginx/nginx.conf
 COPY docker/supervisord.conf /etc/supervisord.conf
 
-RUN mkdir -p \
+RUN rm -f bootstrap/cache/*.php \
+    && mkdir -p \
         storage/app/private storage/app/public \
         storage/framework/cache/data storage/framework/sessions storage/framework/views \
         storage/logs bootstrap/cache /tmp/nginx/client_body /tmp/nginx/proxy /tmp/nginx/fastcgi \
