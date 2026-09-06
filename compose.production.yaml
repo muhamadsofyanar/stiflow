@@ -32,8 +32,8 @@ services:
   app:
     <<: *app-service
     command: ["web"]
-    ports:
-      - "${APP_PORT:-8080}:8080"
+    expose:
+      - "8080"
     healthcheck:
       test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/up"]
       interval: 15s
@@ -43,28 +43,39 @@ services:
   worker:
     <<: *app-service
     command: ["worker"]
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_healthy
 
   scheduler:
     <<: *app-service
     command: ["scheduler"]
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_healthy
 
   db:
-    image: mysql:8.4
+    image: mariadb:11.4
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE:-stiflow}
-      MYSQL_USER: ${DB_USERNAME:-stiflow}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD wajib diisi}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD wajib diisi}
+      MARIADB_DATABASE: ${DB_DATABASE:-stiflow}
+      MARIADB_USER: ${DB_USERNAME:-stiflow}
+      MARIADB_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD wajib diisi}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?DB_ROOT_PASSWORD wajib diisi}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${DB_ROOT_PASSWORD}"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 30s
     volumes:
-      - stiflow_mysql:/var/lib/mysql
+      - stiflow_mariadb:/var/lib/mysql
 
 volumes:
   stiflow_storage:
-  stiflow_mysql:
+  stiflow_mariadb:
